@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "randos": "node ."
+    "randos": "mkdir -p out && node ."
   },
   "keywords": [],
   "author": "",
