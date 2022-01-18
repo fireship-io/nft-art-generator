@@ -1,4 +1,4 @@
-const { readFileSync, writeFileSync, readdirSync, rmSync } = require('fs');
+const { readFileSync, writeFileSync, readdirSync, rmSync, existsSync, mkdirSync } = require('fs');
 const sharp = require('sharp');
 
 const template = `
@@ -107,6 +107,12 @@ function createImage(idx) {
 
 }
 
+
+// Create dir if not exists
+if (!existsSync('./out')){
+    mkdirSync('./out');
+}
+
 // Cleanup dir before each run
 readdirSync('./out').forEach(f => rmSync(`./out/${f}`));
 
@@ -115,7 +121,3 @@ do {
     createImage(idx);
     idx--;
   } while (idx >= 0);
-
-
-
-
