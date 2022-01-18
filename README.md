@@ -2,7 +2,7 @@
 
 A crude tool for generating random NFT images and metadata.
 
-See it in action in the [Web3 NFT Tutorial]() on YouTube.
+See it in action in the [Web3 NFT Tutorial](https://youtu.be/meTpMP0J5E8) on YouTube.
 
 ## Usage
 
