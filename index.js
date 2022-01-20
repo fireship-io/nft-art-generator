@@ -59,52 +59,52 @@ async function svgToPng(name) {
     await resized.toFile(dest);
 }
 
+function getRandomFace(){
+
+    let face = new Object();
+    face.bg = randInt(5);
+    face.hair = randInt(7);
+    face.eyes = randInt(9);
+    face.nose = randInt(4); 
+    face.mouth = randInt(5);
+    face.beard = randInt(3);
+    face.combination = [face.bg, face.hair, face.eyes, face.mouth, face.nose, face.beard].join('');
+    // 18,900 combinations
+    if (takenFaces[face.combination] || !face.combination){
+        return getRandomFace();
+    } else {
+        return face;
+    }
+}
 
 function createImage(idx) {
 
-    const bg = randInt(5);
-    const hair = randInt(7);
-    const eyes = randInt(9);
-    const nose = randInt(4); 
-    const mouth = randInt(5);
-    const beard = randInt(3);
-    // 18,900 combinations
+    const face = getRandomFace();
+    const name = getRandomName();
+    takenFaces[face.combination] = name;
+    const final = template
+        .replace('<!-- bg -->', getLayer(`bg${face.bg}`))
+        .replace('<!-- head -->', getLayer('head0'))
+        .replace('<!-- hair -->', getLayer(`hair${face.hair}`))
+        .replace('<!-- eyes -->', getLayer(`eyes${face.eyes}`))
+        .replace('<!-- nose -->', getLayer(`nose${face.nose}`))
+        .replace('<!-- mouth -->', getLayer(`mouth${face.mouth}`))
+        .replace('<!-- beard -->', getLayer(`beard${face.beard}`, 0.5))
 
-    const face = [hair, eyes, mouth, nose, beard].join('');
-
-    if (face[takenFaces]) {
-        createImage();
-    } else {
-        const name = getRandomName()
-        console.log(name)
-        face[takenFaces] = face;
-
-        const final = template
-            .replace('<!-- bg -->', getLayer(`bg${bg}`))
-            .replace('<!-- head -->', getLayer('head0'))
-            .replace('<!-- hair -->', getLayer(`hair${hair}`))
-            .replace('<!-- eyes -->', getLayer(`eyes${eyes}`))
-            .replace('<!-- nose -->', getLayer(`nose${nose}`))
-            .replace('<!-- mouth -->', getLayer(`mouth${mouth}`))
-            .replace('<!-- beard -->', getLayer(`beard${beard}`, 0.5))
-
-        const meta = {
-            name,
-            description: `A drawing of ${name.split('-').join(' ')}`,
-            image: `${idx}.png`,
-            attributes: [
-                { 
-                    beard: '',
-                    rarity: 0.5
-                }
-            ]
-        }
-        writeFileSync(`./out/${idx}.json`, JSON.stringify(meta))
-        writeFileSync(`./out/${idx}.svg`, final)
-        svgToPng(idx)
+    const meta = {
+        name,
+        description: `A drawing of ${name.split('-').join(' ')}`,
+        image: `${idx}.png`,
+        attributes: [
+            { 
+                beard: '',
+                rarity: 0.5
+            }
+        ]
     }
-
-
+    writeFileSync(`./out/${idx}.json`, JSON.stringify(meta))
+    writeFileSync(`./out/${idx}.svg`, final)
+    svgToPng(idx)
 }
 
 
@@ -121,3 +121,5 @@ do {
     createImage(idx);
     idx--;
   } while (idx >= 0);
+
+console.log(takenFaces);
