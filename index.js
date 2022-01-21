@@ -1,5 +1,7 @@
 const { readFileSync, writeFileSync, readdirSync, rmSync, existsSync, mkdirSync } = require('fs');
 const sharp = require('sharp');
+const ps = require("prompt-sync");
+const inputPrompt = ps();
 
 const template = `
     <svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,7 +17,7 @@ const template = `
 
 const takenNames = {};
 const takenFaces = {};
-let idx = 999;
+let idx = inputPrompt("How many NFT's do you want to generate? ");
 
 function randInt(max) {
     return Math.floor(Math.random() * (max + 1));
@@ -116,8 +118,11 @@ if (!existsSync('./out')){
 // Cleanup dir before each run
 readdirSync('./out').forEach(f => rmSync(`./out/${f}`));
 
-
 do {
     createImage(idx);
     idx--;
-  } while (idx >= 0);
+} while (idx >= 1);
+
+if (idx <= 0) {
+    process.exit();
+}
