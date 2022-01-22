@@ -2,14 +2,13 @@ const { readFileSync, writeFileSync, readdirSync, rmSync, existsSync, mkdirSync 
 const sharp = require('sharp');
 
 const template = `
-    <svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="350" height="339" viewBox="0 0 350 339" fill="none" xmlns="http://www.w3.org/2000/svg">
         <!-- bg -->
         <!-- head -->
         <!-- hair -->
         <!-- eyes -->
         <!-- nose -->
         <!-- mouth -->
-        <!-- beard -->
     </svg>
 `
 
@@ -27,13 +26,14 @@ function randElement(arr) {
 
 
 function getRandomName() {
-    const adjectives = 'fired trashy tubular nasty jacked swol buff ferocious firey flamin agnostic artificial bloody crazy cringey crusty dirty eccentric glutinous harry juicy simple stylish awesome creepy corny freaky shady sketchy lame sloppy hot intrepid juxtaposed killer ludicrous mangy pastey ragin rusty rockin sinful shameful stupid sterile ugly vascular wild young old zealous flamboyant super sly shifty trippy fried injured depressed anxious clinical'.split(' ');
-    const names = 'aaron bart chad dale earl fred grady harry ivan jeff joe kyle lester steve tanner lucifer todd mitch hunter mike arnold norbert olaf plop quinten randy saul balzac tevin jack ulysses vince will xavier yusuf zack roger raheem rex dustin seth bronson dennis'.split(' ');
-    
-    const randAdj = randElement(adjectives);
-    const randName = randElement(names);
-    const name =  `${randAdj}-${randName}`;
+    const adjectives = 'astute clear-sighted creative decisive discerning inquisitive intuitive observant quick-witted sincere athletic diligent persistent steadfast benevolent generous kindhearted'
+    const names = 'olivia emma amelia ava sophia charlotte isabella mia luna harper gianna evelyn aria ella ellie mila layla avery camila lily scarlett sofia nova aurora chloe riley nora hazel abigail rylee penelope elena zoey isla eleanor elizabeth madison willow emilia violet'.split(' ');
+    const lastNames = 'smith johnson williams brown jones garcia miller davis wilson harris clark walker young valentine king campbell carter roberts phillips evans turner parker edwards collins stewart morris murphy cook'.split('')
 
+    const randAdj = randElement(adjectives);
+    const randLastName = randElement(lastNames);
+    const randName = randElement(names);
+    const name = `${randAdj}-${randName}-${randLastName}`;
 
     if (takenNames[name] || !name) {
         return getRandomName();
@@ -70,7 +70,7 @@ function createImage(idx) {
     const beard = randInt(3);
     // 18,900 combinations
 
-    const face = [hair, eyes, mouth, nose, beard].join('');
+    const face = [hair, eyes, mouth, nose].join('');
 
     if (face[takenFaces]) {
         createImage();
@@ -86,15 +86,15 @@ function createImage(idx) {
             .replace('<!-- eyes -->', getLayer(`eyes${eyes}`))
             .replace('<!-- nose -->', getLayer(`nose${nose}`))
             .replace('<!-- mouth -->', getLayer(`mouth${mouth}`))
-            .replace('<!-- beard -->', getLayer(`beard${beard}`, 0.5))
 
+        // needs optimization in the future so that this gets automatically generated once
+        // create the image.
         const meta = {
             name,
             description: `A drawing of ${name.split('-').join(' ')}`,
             image: `${idx}.png`,
             attributes: [
                 { 
-                    beard: '',
                     rarity: 0.5
                 }
             ]
