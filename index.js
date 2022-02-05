@@ -13,9 +13,10 @@ const template = `
     </svg>
 `
 
-const takenNames = {};
-const takenFaces = {};
-let idx = 999;
+const takenNames = new Set();
+const takenFaces = new Set();
+const numNft = 1000;
+let idx = numNft;
 
 function randInt(max) {
     return Math.floor(Math.random() * (max + 1));
@@ -35,10 +36,10 @@ function getRandomName() {
     const name =  `${randAdj}-${randName}`;
 
 
-    if (takenNames[name] || !name) {
+    if (takenNames.has(name) || !name) {
         return getRandomName();
     } else {
-        takenNames[name] = name;
+        takenNames.add(name);
         return name;
     }
 }
@@ -72,12 +73,12 @@ function createImage(idx) {
 
     const face = [hair, eyes, mouth, nose, beard].join('');
 
-    if (face[takenFaces]) {
+    if (takenFaces.has(face)) {
         createImage();
     } else {
         const name = getRandomName()
-        console.log(name)
-        face[takenFaces] = face;
+        console.log(name);
+        takenFaces.add(face);
 
         const final = template
             .replace('<!-- bg -->', getLayer(`bg${bg}`))
@@ -103,10 +104,7 @@ function createImage(idx) {
         writeFileSync(`./out/${idx}.svg`, final)
         svgToPng(idx)
     }
-
-
 }
-
 
 // Create dir if not exists
 if (!existsSync('./out')){
@@ -116,8 +114,14 @@ if (!existsSync('./out')){
 // Cleanup dir before each run
 readdirSync('./out').forEach(f => rmSync(`./out/${f}`));
 
-
 do {
     createImage(idx);
     idx--;
-  } while (idx >= 0);
+} while (idx > 0);
+
+const numUniqueNfts = takenFaces.size;
+if (numUniqueNfts === numNft) {
+    console.log(`${numNft} unique nft's generated.`);
+} else {
+    console.error(`Some generated nft's are not unique. Unique: ${numUniqueNfts}; Generated: ${numNft}`);
+}
