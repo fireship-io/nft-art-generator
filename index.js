@@ -1,6 +1,7 @@
 const { readFileSync, writeFileSync, readdirSync, rmSync, existsSync, mkdirSync } = require('fs');
 const sharp = require('sharp');
 
+//Template for the NFT
 const template = `
     <svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
         <!-- bg -->
@@ -12,7 +13,7 @@ const template = `
         <!-- beard -->
     </svg>
 `
-
+//declaration of arrays (Names) already taken --> 
 const takenNames = {};
 const takenFaces = {};
 let idx = 999;
@@ -25,16 +26,17 @@ function randElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-
+//Picks a random name and adjective from names and adj arrays -->
 function getRandomName() {
     const adjectives = 'fired trashy tubular nasty jacked swol buff ferocious firey flamin agnostic artificial bloody crazy cringey crusty dirty eccentric glutinous harry juicy simple stylish awesome creepy corny freaky shady sketchy lame sloppy hot intrepid juxtaposed killer ludicrous mangy pastey ragin rusty rockin sinful shameful stupid sterile ugly vascular wild young old zealous flamboyant super sly shifty trippy fried injured depressed anxious clinical'.split(' ');
     const names = 'aaron bart chad dale earl fred grady harry ivan jeff joe kyle lester steve tanner lucifer todd mitch hunter mike arnold norbert olaf plop quinten randy saul balzac tevin jack ulysses vince will xavier yusuf zack roger raheem rex dustin seth bronson dennis'.split(' ');
     
+    // Stores random name and ajectives then combines them as the variable name --> 
     const randAdj = randElement(adjectives);
     const randName = randElement(names);
     const name =  `${randAdj}-${randName}`;
 
-
+    //Check name picked against takenNames array and proceed if match found 
     if (takenNames[name] || !name) {
         return getRandomName();
     } else {
@@ -43,6 +45,7 @@ function getRandomName() {
     }
 }
 
+//building the NFT using previously declared variables (const template)
 function getLayer(name, skip=0.0) {
     const svg = readFileSync(`./layers/${name}.svg`, 'utf-8');
     const re = /(?<=\<svg\s*[^>]*>)([\s\S]*?)(?=\<\/svg\>)/g
@@ -50,6 +53,7 @@ function getLayer(name, skip=0.0) {
     return Math.random() > skip ? layer : '';
 }
 
+//outputs result as .png
 async function svgToPng(name) {
     const src = `./out/${name}.svg`;
     const dest = `./out/${name}.png`;
@@ -70,6 +74,7 @@ function createImage(idx) {
     const beard = randInt(3);
     // 18,900 combinations
 
+    //defines features and creation of the NFT face
     const face = [hair, eyes, mouth, nose, beard].join('');
 
     if (face[takenFaces]) {
@@ -99,6 +104,7 @@ function createImage(idx) {
                 }
             ]
         }
+        //save NFT format ie .json .svg .png
         writeFileSync(`./out/${idx}.json`, JSON.stringify(meta))
         writeFileSync(`./out/${idx}.svg`, final)
         svgToPng(idx)
