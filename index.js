@@ -15,8 +15,8 @@ const template = `
 
 const takenNames = new Set();
 const takenFaces = new Set();
-const numNft = 1000;
-let idx = numNft;
+const numNfts = 1000;
+let idx = numNfts;
 
 function randInt(max) {
     return Math.floor(Math.random() * (max + 1));
@@ -120,8 +120,8 @@ do {
 } while (idx > 0);
 
 const numUniqueNfts = takenFaces.size;
-if (numUniqueNfts === numNft) {
-    console.log(`${numNft} unique nft's generated.`);
+if (numUniqueNfts === numNfts) {
+    console.log(`${numNfts} unique nft's generated.`);
 } else {
-    console.error(`Some generated nft's are not unique. Unique: ${numUniqueNfts}; Generated: ${numNft}`);
+    console.error(`Some generated nft's are not unique. Unique: ${numUniqueNfts}; Generated: ${numNfts}`);
 }
