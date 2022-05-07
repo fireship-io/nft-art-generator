@@ -13,3 +13,18 @@ npx hardhat run scripts/sample-script.js --network localhost
 # terminal 3 
 npm run dev
 https://github.com/fireship-io/nft-art-generator/pull/12#issuecomment-1106654412
+env
+node_modules/
+out/git clone <this-repo>
+npm install
+
+# terminal 1
+npx hardhat node
+
+# terminal 2
+npx hardhat compile
+npx hardhat run scripts/sample-script.js --network localhost
+
+# terminal 3 
+npm run dev
+https://github.com/fireship-io/nft-art-generator/pull/12#issuecomment-1106654412
